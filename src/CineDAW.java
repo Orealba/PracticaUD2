@@ -1,4 +1,4 @@
-import org.ietf.jgss.GSSName;
+
 
 import java.util.InputMismatchException;
 import java.util.Locale;
@@ -49,7 +49,7 @@ public class CineDAW {
 
                         break;
                     case 2:
-                        System.out.println("Aqui compraremos entrada ");
+                        sala = comprarEntrada(sala, scanner);
                         break;
                     case 3:
                         System.out.println("AQui van las estadisticas ");
@@ -84,7 +84,7 @@ public class CineDAW {
 
     }
 
-    static void comprarEntrada (String sala, Scanner scanner) {
+    static String comprarEntrada (String sala, Scanner scanner) {
         //si est{a completa muestra el aviso y vuelve al menu
         if(sala.indexOf('-') == -1 ) {
             System.out.println("La sala esta llena");
@@ -96,7 +96,31 @@ public class CineDAW {
             System.out.println("Error. Dame la fila donde quieres sentarte, entre A y F:");
             seleccionFila = scanner.nextLine().trim().toUpperCase();
         }
-        System.out.println();
-        }
 
+
+
+        //aqui ponemos una var en -1 porque las butacas van del 1 al 8
+    //y haremos el try catch por si el usuario mete algo que no debe para que no de error
+    //y hacemos un nextLine para limpiar
+
+    int seleccionButaca = -1;
+        do {
+        System.out.println("Introduce la butaca entre 1 y 8:");
+            try {
+                 seleccionButaca= scanner.nextInt();
+                scanner.nextLine();
+
+                    if ( seleccionButaca< 1 ||  seleccionButaca > BUTACAS_POR_FILA ) {
+                    System.out.println("Lo siento, la butaca debe ser un numero entre 1 y " + BUTACAS_POR_FILA + ",");
+                    }
+
+                } catch (InputMismatchException e) {
+                System.out.println("Hay que introducir un num entero");
+                scanner.nextLine();
+                }
+            } while (seleccionButaca < 1 || seleccionButaca > BUTACAS_POR_FILA);
+
+        System.out.println();
+        return sala;
+    }
 }
