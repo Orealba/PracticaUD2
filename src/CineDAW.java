@@ -1,4 +1,7 @@
+import org.ietf.jgss.GSSName;
+
 import java.util.InputMismatchException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class CineDAW {
@@ -13,7 +16,7 @@ public class CineDAW {
     static final int PRECIO_GENERAL = 850;
     static final int SUPLEMENTO_FIN_SEMANA = 150;
 
-    static String butacasLibres() {
+    static String salaVacia() {
         String marcaLibre = "";
         for (int i = 0; i < (FILAS * BUTACAS_POR_FILA); i++) {
             marcaLibre += LIBRE;
@@ -24,7 +27,7 @@ public class CineDAW {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int opcionMenu = -1;
-        String sala = butacasLibres();
+        String sala = salaVacia();
         int entradasVendidas = 0;
         int totalDia = 0;
 
@@ -71,7 +74,6 @@ public class CineDAW {
 
 
     }
-
     static void verSala(String sala) {
         for ( int i = 0; i < FILAS; i++) {
             for (int j= 0; j < BUTACAS_POR_FILA; j++ ){
@@ -81,5 +83,20 @@ public class CineDAW {
         }
 
     }
+
+    static void comprarEntrada (String sala, Scanner scanner) {
+        //si est{a completa muestra el aviso y vuelve al menu
+        if(sala.indexOf('-') == -1 ) {
+            System.out.println("La sala esta llena");
+            return;
+        }
+        System.out.println("Dame la fila donde quieres sentarte, entre A y F:");
+         String seleccionFila = scanner.nextLine().trim().toUpperCase();
+        while (seleccionFila.length() != 1 || seleccionFila.charAt(0) < 'A' || seleccionFila.charAt(0) > 'F'){
+            System.out.println("Error. Dame la fila donde quieres sentarte, entre A y F:");
+            seleccionFila = scanner.nextLine().trim().toUpperCase();
+        }
+        System.out.println();
+        }
 
 }
