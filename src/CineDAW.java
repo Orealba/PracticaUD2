@@ -55,7 +55,25 @@ public class CineDAW {
                         sala = comprarEntrada(sala, scanner);
                         break;
                     case 3:
-                        System.out.println("AQui van las estadisticas ");
+                        String textoEntradas = (entradasVendidas == 1) ? "1 entrada" : entradasVendidas + " entradas";
+                        int eurosRecaudacion = totalDia / 100;
+                        int centimosRecaudacion = totalDia % 100;
+                        String formatoCentimosRecaudacion = (centimosRecaudacion < 10) ? "0" + centimosRecaudacion : String.valueOf(centimosRecaudacion);
+                        int butacasOcupadas = 0;
+                        for (int i = 0; i < sala.length(); i++) {
+                            if (sala.charAt(i) == LIBRE) {
+                                continue;
+                            }
+                            butacasOcupadas++;
+                        }
+                        int butacasLibres = (FILAS * BUTACAS_POR_FILA) - butacasOcupadas;
+                        double porcentajeOcupacion = (double) butacasOcupadas / (FILAS * BUTACAS_POR_FILA) * 100;
+                        double ocupacionRedondeada = Math.round(porcentajeOcupacion * 100.0) / 100.0;
+
+                        System.out.println("Entradas vendidas: " + textoEntradas);
+                        System.out.println("Recaudación: " + eurosRecaudacion + "," + formatoCentimosRecaudacion + " €");
+                        System.out.println("Butacas ocupadas: " + butacasOcupadas + " libres: " + butacasLibres);
+                        System.out.println("Ocupación: " + ocupacionRedondeada + "%");
                         break;
                     case 0:
                         System.out.println("saliendo de cinedaw entradas vendidas");
@@ -138,8 +156,34 @@ public class CineDAW {
             precioBase = PRECIO_GENERAL;
             System.out.println("precio general");
         }
+        //con el día listo calculamos el precio final
+        int dia = pedirDia(scanner);
+        int precioFinal = precioBase;
+        switch (dia) {
+            case 1:
+            case 2:
+            case 4:
+            case 5:
+                break;
+            case 3:
+                System.out.println("Miércoles del espectador: -30%");
+                precioFinal = (int)  Math.round(precioBase * 0.70);
+                break;
+            case 6:
+            case 7:
+                precioFinal += SUPLEMENTO_FIN_SEMANA;
+                break;
+        }
+            int euros = precioFinal / 100;
+        int centimos = precioFinal % 100;
+        String textoCentimos = (centimos < 10) ? "0" + centimos : String.valueOf(centimos);
+        System.out.println("Total a pagar: " + euros + "," + textoCentimos + " €");
 
-
+        //marcamos la butaca y sumamos venta
+        sala = sala.substring(0,posicion) + OCUPADA + sala.substring(posicion +1);
+        entradasVendidas++;
+        totalDia += precioFinal;
+        System.out.println("Entrada vendida: fila " + seleccionFila + ", butaca " + seleccionButaca + ".");
         System.out.println();
 
 
