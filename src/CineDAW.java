@@ -3,10 +3,11 @@
 import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.concurrent.RecursiveTask;
 
 public class CineDAW {
     //declaramos antes del método  para que todas las var se puedan usar dentro de los metodos
-    static final int FILAS =6;
+    static final int FILAS = 6;
     static final int BUTACAS_POR_FILA = 8;
     static final char LIBRE = '-';
     static final char OCUPADA = 'X';
@@ -32,12 +33,12 @@ public class CineDAW {
         int totalDia = 0;
 
         final String MENU = """
-              ===== CineDAW =====
-               1. Ver sala
-               2. Comprar entrada
-               3. Estadísticas
-               0. Salir
-               Elige una opción:\s""";
+                ===== CineDAW =====
+                 1. Ver sala
+                 2. Comprar entrada
+                 3. Estadísticas
+                 0. Salir
+                 Elige una opción:\s""";
         do {
             System.out.println(MENU);
             try {
@@ -45,7 +46,8 @@ public class CineDAW {
                 scanner.nextLine();
 
                 switch (opcionMenu) {
-                    case 1: verSala(sala);
+                    case 1:
+                        verSala(sala);
 
                         break;
                     case 2:
@@ -67,60 +69,101 @@ public class CineDAW {
 
             }
 
-        } while (opcionMenu !=0);
+        } while (opcionMenu != 0);
         scanner.close();
 
 
-
-
     }
+
     static void verSala(String sala) {
-        for ( int i = 0; i < FILAS; i++) {
-            for (int j= 0; j < BUTACAS_POR_FILA; j++ ){
-                System.out.print(sala.charAt( j+(i * BUTACAS_POR_FILA)));
+        for (int i = 0; i < FILAS; i++) {
+            for (int j = 0; j < BUTACAS_POR_FILA; j++) {
+                System.out.print(sala.charAt(j + (i * BUTACAS_POR_FILA)));
             }
             System.out.println();
         }
 
     }
 
-    static String comprarEntrada (String sala, Scanner scanner) {
+    static String comprarEntrada(String sala, Scanner scanner) {
         //si est{a completa muestra el aviso y vuelve al menu
-        if(sala.indexOf('-') == -1 ) {
+        if (sala.indexOf('-') == -1) {
             System.out.println("La sala esta llena");
-            return;
+            return sala;
         }
         System.out.println("Dame la fila donde quieres sentarte, entre A y F:");
-         String seleccionFila = scanner.nextLine().trim().toUpperCase();
-        while (seleccionFila.length() != 1 || seleccionFila.charAt(0) < 'A' || seleccionFila.charAt(0) > 'F'){
+        String seleccionFila = scanner.nextLine().trim().toUpperCase();
+        while (seleccionFila.length() != 1 || seleccionFila.charAt(0) < 'A' || seleccionFila.charAt(0) > 'F') {
             System.out.println("Error. Dame la fila donde quieres sentarte, entre A y F:");
             seleccionFila = scanner.nextLine().trim().toUpperCase();
         }
-
-
-
         //aqui ponemos una var en -1 porque las butacas van del 1 al 8
-    //y haremos el try catch por si el usuario mete algo que no debe para que no de error
-    //y hacemos un nextLine para limpiar
+        //y haremos el try catch por si el usuario mete algo que no debe para que no de error
+        //y hacemos un nextLine para limpiar
 
-    int seleccionButaca = -1;
+        int seleccionButaca = -1;
         do {
-        System.out.println("Introduce la butaca entre 1 y 8:");
+            System.out.println("Introduce la butaca entre 1 y 8:");
             try {
-                 seleccionButaca= scanner.nextInt();
+                seleccionButaca = scanner.nextInt();
                 scanner.nextLine();
 
-                    if ( seleccionButaca< 1 ||  seleccionButaca > BUTACAS_POR_FILA ) {
+                if (seleccionButaca < 1 || seleccionButaca > BUTACAS_POR_FILA) {
                     System.out.println("Lo siento, la butaca debe ser un numero entre 1 y " + BUTACAS_POR_FILA + ",");
-                    }
+                }
 
-                } catch (InputMismatchException e) {
+            } catch (InputMismatchException e) {
                 System.out.println("Hay que introducir un num entero");
                 scanner.nextLine();
-                }
-            } while (seleccionButaca < 1 || seleccionButaca > BUTACAS_POR_FILA);
+            }
+        } while (seleccionButaca < 1 || seleccionButaca > BUTACAS_POR_FILA);
+
+
+        int posicion = (seleccionFila.charAt(0) - 'A') * BUTACAS_POR_FILA + (seleccionButaca - 1);
+        if (sala.charAt(posicion) == OCUPADA) {
+            System.out.println("Lo siento est{a ocupada la butaca");
+            return sala;
+        }
+        //pedimos la edad y llamamos al método pedirEdad
+         int edad = pedirEdad(scanner);
+        int precioBase = 0;
+        if (edad < 12) {
+            precioBase = PRECIO_INFANTIL;
+            System.out.println("precio infantil");
+        }else if (edad>= 65) {
+            precioBase = PRECIO_SENIOR;
+            System.out.println("precio senior");
+        } else {
+            precioBase = PRECIO_GENERAL;
+            System.out.println("precio general");
+        }
+
 
         System.out.println();
+
+
         return sala;
     }
+
+    static int pedirEdad(Scanner scanner) {
+        int edad = -1;
+        do {
+            System.out.println("Ingresa la edad del asistente, ente 0 y 120");
+            try {
+                edad = scanner.nextInt();
+                scanner.nextLine();
+                if (edad < 0 || edad > 120) {
+                    System.out.println("Error. La edad debe estar entre 0 y 120");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Hay que introducir un num entero");
+                scanner.nextLine();
+            }
+        } while (edad < 0 || edad > 120);
+
+        return edad;
+
+    }
+
 }
+
