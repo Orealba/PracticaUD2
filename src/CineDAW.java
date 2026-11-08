@@ -16,6 +16,8 @@ public class CineDAW {
     static final int PRECIO_SENIOR = 600;
     static final int PRECIO_GENERAL = 850;
     static final int SUPLEMENTO_FIN_SEMANA = 150;
+    static int entradasVendidas = 0;
+    static int totalDia = 0;
 
     static String salaVacia() {
         String marcaLibre = "";
@@ -29,8 +31,7 @@ public class CineDAW {
         Scanner scanner = new Scanner(System.in);
         int opcionMenu = -1;
         String sala = salaVacia();
-        int entradasVendidas = 0;
-        int totalDia = 0;
+
 
         final String MENU = """
                 ===== CineDAW =====
@@ -164,6 +165,26 @@ public class CineDAW {
         return edad;
 
     }
+    //pedimos el dia con este método y volvemos a poner scanner dentro de él
+    static int pedirDia(Scanner scanner) {
+        int dia = -1;
+        do {
+            System.out.println("Dime un día de la semana, 1 = lunes … 7 = domingo");
+                    try {
+                dia = scanner.nextInt();
+                scanner.nextLine();
+                if (dia < 1 || dia > 7) {
+                    System.out.println("Error debe ser entre 1 y 7");
+                }
+            }catch (InputMismatchException e) {
+                System.out.println("debes introducir un entero");
+                scanner.nextLine();
+            }
+        } while (dia < 1 || dia > 7);
+
+        return dia;
+    }
+
 
 }
 
