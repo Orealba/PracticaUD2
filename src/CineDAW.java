@@ -93,16 +93,26 @@ public class CineDAW {
 
 
     }
+//agrego la letra, espacios y num al ver la sala
+static void verSala(String sala) {
+    System.out.println("      P A N T A L L A");
+    System.out.println("    1 2 3 4   5 6 7 8");
+    for (int i = 0; i < FILAS; i++) {
+        char letraFila = (char) ('A' + i);
+        System.out.print(letraFila + "   ");
+        for (int j = 0; j < BUTACAS_POR_FILA; j++) {
+            // AQUÍ está la clave: imprimir la butaca MÁS un espacio
+            System.out.print(sala.charAt(j + (i * BUTACAS_POR_FILA)) + " ");
 
-    static void verSala(String sala) {
-        for (int i = 0; i < FILAS; i++) {
-            for (int j = 0; j < BUTACAS_POR_FILA; j++) {
-                System.out.print(sala.charAt(j + (i * BUTACAS_POR_FILA)));
+            // Pasillo central después de la butaca 4
+            if (j == 3) {
+                System.out.print("  ");
             }
-            System.out.println();
         }
-
+        System.out.println();
     }
+    System.out.println("  (- libre, X ocupada)");
+}
 
     static String comprarEntrada(String sala, Scanner scanner) {
         //si est{a completa muestra el aviso y vuelve al menu
@@ -174,7 +184,7 @@ public class CineDAW {
                 precioFinal += SUPLEMENTO_FIN_SEMANA;
                 break;
         }
-            int euros = precioFinal / 100;
+        int euros = precioFinal / 100;
         int centimos = precioFinal % 100;
         String textoCentimos = (centimos < 10) ? "0" + centimos : String.valueOf(centimos);
         System.out.println("Total a pagar: " + euros + "," + textoCentimos + " €");
